@@ -1,6 +1,22 @@
 const express = require('express');
+const cors = require('cors');
+const bodyParser = require('body-parser');
+const productRoutes = require('./routes/products');
 const app = express();
 
-const port = process.env.PORT || 8000;
+// enable CORS
+app.use(cors());
 
-app.listen(port, () => console.log(`Server running on port ${port}`));
+// parse incoming requests with JSON payloads
+app.use(bodyParser.json());
+
+// define routes
+app.use('/api/products', productRoutes);
+
+// define port
+const port = 3000;
+
+// start the server
+app.listen(port, () => {
+  console.log(`Server started listening on port ${port}`);
+});
