@@ -14,7 +14,7 @@ router.put('/:id', productsController.updateProduct);
 // Search products by Scrum Master name
 router.get('/scrum-master/:scrumMasterName', productsController.getProductsByScrumMaster);
 
-// // Search products by developer name
+// Search products by developer name
 router.get('/developer/:developer', productsController.getProductsByDeveloper);
 
 module.exports = router;

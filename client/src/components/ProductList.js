@@ -1,24 +1,25 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import { getAllProducts } from '../services/productService';
 
 function ProductList() {
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
-    async function fetchData() {
-      const response = await axios.get('/api/products');
-      setProducts(response.data);
-    }
-    fetchData();
+    const fetchProducts = async () => {
+      const products = await getAllProducts();
+      setProducts(products);
+    };
+
+    fetchProducts();
   }, []);
 
   return (
     <div>
       <h1>Product List</h1>
-      <table>
+      <table className="table">
         <thead>
           <tr>
-            <th>Product ID</th>
+            <th>Product Number</th>
             <th>Product Name</th>
             <th>Product Owner Name</th>
             <th>Developers</th>
@@ -26,7 +27,6 @@ function ProductList() {
             <th>Start Date</th>
             <th>Methodology</th>
             <th>Edit</th>
-            <th>Delete</th>
           </tr>
         </thead>
         <tbody>
@@ -39,15 +39,15 @@ function ProductList() {
               <td>{product.scrumMasterName}</td>
               <td>{product.startDate}</td>
               <td>{product.methodology}</td>
-              <td><button>Edit</button></td>
-              <td><button>Delete</button></td>
+              <td><button className="btn btn-primary">Edit</button></td>
             </tr>
           ))}
         </tbody>
         <tfoot>
           <tr>
-            <td colSpan="8">Total Products:</td>
+            <td colSpan="7">Total Products:</td>
             <td>{products.length}</td>
+            <td></td>
           </tr>
         </tfoot>
       </table>
