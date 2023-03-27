@@ -1,72 +1,55 @@
-import React, { useState } from 'react';
-import { useHistory } from 'react-router-dom';
-import { Form, FormGroup, Label, Input, Button } from 'reactstrap';
-import axios from 'axios';
+import React, { useState, useEffect } from 'react';
+import { updateProduct } from '../services/productService';
 
-const EditProductForm = (props) => {
-  const { product, onUpdate } = props;
+function EditProductForm({ product, closeModal }) {
+  // Add your form states here, for example:
   const [productName, setProductName] = useState(product.productName);
   const [productOwnerName, setProductOwnerName] = useState(product.productOwnerName);
-  const [scrumMasterName, setScrumMasterName] = useState(product.scrumMasterName);
-  const [developerNames, setDeveloperNames] = useState(product.developerNames.join(', '));
-  const [startDate, setStartDate] = useState(product.startDate);
-  const [methodology, setMethodology] = useState(product.methodology);
-  const history = useHistory();
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    const developers = developerNames.split(',').map(name => name.trim());
+  useEffect(() => {
+    setProductName(product.productName);
+    setProductOwnerName(product.productOwnerName);
+  }, [product]);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     const updatedProduct = {
       ...product,
       productName,
       productOwnerName,
-      scrumMasterName,
-      developerNames: developers,
-      startDate,
-      methodology,
     };
-    try {
-      await axios.put(`/api/products/${product.productId}`, updatedProduct);
-      onUpdate(updatedProduct);
-      history.push('/');
-    } catch (error) {
-      console.error(error);
-    }
+
+    // await updateProduct(updatedProduct);
+    // closeModal();
+    // window.location.reload(); // Refresh the product list
   };
 
   return (
-    <Form onSubmit={handleSubmit}>
-      <FormGroup>
-        <Label for="productName">Product Name</Label>
-        <Input type="text" name="productName" id="productName" value={productName} onChange={(e) => setProductName(e.target.value)} required />
-      </FormGroup>
-      <FormGroup>
-        <Label for="productOwnerName">Product Owner</Label>
-        <Input type="text" name="productOwnerName" id="productOwnerName" value={productOwnerName} onChange={(e) => setProductOwnerName(e.target.value)} required />
-      </FormGroup>
-      <FormGroup>
-        <Label for="scrumMasterName">Scrum Master</Label>
-        <Input type="text" name="scrumMasterName" id="scrumMasterName" value={scrumMasterName} onChange={(e) => setScrumMasterName(e.target.value)} required />
-      </FormGroup>
-      <FormGroup>
-        <Label for="developerNames">Developer Names (up to 5)</Label>
-        <Input type="text" name="developerNames" id="developerNames" value={developerNames} onChange={(e) => setDeveloperNames(e.target.value)} required />
-      </FormGroup>
-      <FormGroup>
-        <Label for="startDate">Start Date</Label>
-        <Input type="date" name="startDate" id="startDate" value={startDate} onChange={(e) => setStartDate(e.target.value)} required />
-      </FormGroup>
-      <FormGroup>
-        <Label for="methodology">Methodology</Label>
-        <Input type="select" name="methodology" id="methodology" value={methodology} onChange={(e) => setMethodology(e.target.value)} required >
-          <option value="">-- Select Methodology --</option>
-          <option value="Agile">Agile</option>
-          <option value="Waterfall">Waterfall</option>
-        </Input>
-      </FormGroup>
-      <Button type="submit">Save</Button>
-    </Form>
+    <form onSubmit={handleSubmit}>
+      {/* Your form inputs, for example: */}
+      <div>
+        <label htmlFor="productName">Product Name:</label>
+        <input
+          type="text"
+          id="productName"
+          value={productName}
+          onChange={(e) => setProductName(e.target.value)}
+        />
+      </div>
+      <div>
+        <label htmlFor="productOwnerName">Product Owner Name:</label>
+        <input
+          type="text"
+          id="productOwnerName"
+          value={productOwnerName}
+          onChange={(e) => setProductOwnerName(e.target.value)}
+        />
+      </div>
+      <button type="submit" className="btn btn-primary">
+        Save Changes
+      </button>
+    </form>
   );
-};
+}
 
 export default EditProductForm;

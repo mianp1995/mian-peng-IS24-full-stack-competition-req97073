@@ -1,8 +1,24 @@
 import React, { useState, useEffect } from 'react';
+import Modal from 'react-modal';
 import { getAllProducts } from '../services/productService';
+import AddProductForm from './AddProductForm';
+
+const customStyles = {
+  content: {
+    top: '50%',
+    left: '50%',
+    right: 'auto',
+    bottom: 'auto',
+    marginRight: '-50%',
+    transform: 'translate(-50%, -50%)',
+  },
+};
+
+Modal.setAppElement('#root');
 
 function ProductList() {
   const [products, setProducts] = useState([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -13,9 +29,36 @@ function ProductList() {
     fetchProducts();
   }, []);
 
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleProductAddition = (newProduct) => {
+    setProducts([...products, newProduct]);
+  };
+
   return (
     <div>
       <h1>Product List</h1>
+      <button className="btn btn-primary" onClick={openModal}>
+        Add Product
+      </button>
+      <Modal
+        isOpen={isModalOpen}
+        onRequestClose={closeModal}
+        style={customStyles}
+        contentLabel="Add Product"
+      >
+        <h2>Add Product</h2>
+        <AddProductForm closeModal={closeModal} onProductAdd={handleProductAddition} />
+        <button className="btn btn-secondary" onClick={closeModal}>
+          Close
+        </button>
+      </Modal>
       <table className="table">
         <thead>
           <tr>
