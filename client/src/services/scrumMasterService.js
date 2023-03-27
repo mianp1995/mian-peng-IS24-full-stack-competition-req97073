@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const apiUrl = "http://localhost:3001/api/scrumMasters";
+const apiUrl = "http://localhost:5000/scrumMasters";
 
 export const getAllScrumMasters = async () => {
   const response = await axios.get(apiUrl);

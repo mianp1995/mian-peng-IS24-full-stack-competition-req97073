@@ -1,8 +1,15 @@
 const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
-const productRoutes = require('./routes/products');
+const productRoutes = require('./routers/products');
 const app = express();
+// const cacheClient = require('./nodeCache');
+// const mockProducts = require('./data/products');
+
+// // load mock data into node cache
+// mockProducts.forEach(p => {
+//   cacheClient.set()
+// })
 
 // enable CORS
 app.use(cors());
@@ -14,7 +21,7 @@ app.use(bodyParser.json());
 app.use('/api/products', productRoutes);
 
 // define port
-const port = 3000;
+const port = 8080;
 
 // start the server
 app.listen(port, () => {
