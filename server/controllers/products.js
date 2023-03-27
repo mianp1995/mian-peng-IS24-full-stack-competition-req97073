@@ -70,9 +70,20 @@ const getProductsByScrumMaster = async (req, res) => {
   return res.status(200).json(productsData.filter(p => p.scrumMasterName === scrumMasterName));
 };
 
+const getProductsByDeveloper = async (req, res) => {
+  const { developer } = req.params;
+
+  if (!developer) return res.status(400).json({ error: 'developerName is required' });
+
+  const filteredProducts = productsData.filter(p => p.developers.includes(developer));
+  return res.status(200).json(filteredProducts);
+};
+
+
 module.exports = {
   getAllProducts,
   createProduct,
   updateProduct,
-  getProductsByScrumMaster
+  getProductsByScrumMaster,
+  getProductsByDeveloper
 };
