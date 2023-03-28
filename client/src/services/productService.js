@@ -1,42 +1,34 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:3001';
+const API_URL = 'http://localhost:8080';
 
-class ProductService {
-  // Get all products
-  getAllProducts() {
-    return axios.get(`${API_URL}/products`);
-  }
+export const getAllProducts = async () => {
+  const response = await axios.get(`${API_URL}/api/products`);
+  return response.data;
+};
 
-  // Get product by id
-  getProductById(productId) {
-    return axios.get(`${API_URL}/products/${productId}`);
+export const createProduct = async (productData) => {
+  try {
+    const response = await axios.post(`${API_URL}/api/products`, productData);
+    console.log('Product created:', response.data);
+    return response.data;
+  } catch (error) {
+    console.error('Error creating product:', error);
+    throw error;
   }
+};
 
-  // Create new product
-  createProduct(productData) {
-    return axios.post(`${API_URL}/products`, productData);
-  }
-
-  // Update product by id
-  updateProduct(productId, productData) {
-    return axios.put(`${API_URL}/products/${productId}`, productData);
-  }
-
-  // Delete product by id
-  deleteProduct(productId) {
-    return axios.delete(`${API_URL}/products/${productId}`);
-  }
-
-  // Search products by Scrum Master name
-  searchProductsByScrumMaster(scrumMasterName) {
-    return axios.get(`${API_URL}/products?scrumMasterName=${scrumMasterName}`);
-  }
-
-  // Search products by Developer name
-  searchProductsByDeveloper(developerName) {
-    return axios.get(`${API_URL}/products?developerName=${developerName}`);
-  }
+export const updateProduct = async(productData) => {
+  const response = await axios.put(`${API_URL}/api/products/${productData.productId}`, productData);
+  return response.data;
 }
 
-export default new ProductService();
+export const searchProductByScrumMaster = async(productData) => {
+  const response = await axios.get(`${API_URL}/api/products/${productData.scrumMaster}`);
+  return response.data;
+}
+
+export const searchProductByDeveloper = async(productData) => {
+  const response = await axios.get(`${API_URL}/api/products/${productData.developer}`);
+  return response.data;
+}

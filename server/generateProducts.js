@@ -1,47 +1,44 @@
-const fs = require('fs');
-const { faker } = require('@faker-js/faker');
-const uuid = require('uuid');
+const fs = require("fs");
+const { v4: uuidv4 } = require("uuid");
 
-const products = [];
+const names = [
+  "Alice", "Bob", "Charlie", "David", "Eve", "Frank", "Grace", "Helen", "Ivy", "Jack", "John", "Jane", "Samantha", "Peter"
+];
 
-// Generate 40 sample products
-for (let i = 1; i <= 40; i++) {
-  const productId = parseInt(uuid.v4().replace(/-/g, '').substring(0, 8), 16);
-  const product = {
-    productId: productId,
-    productName: faker.commerce.productName(),
-    productOwnerName: faker.name.findName(),
-    Developers: [
-      faker.name.findName(),
-      faker.name.findName(),
-      faker.name.findName(),
-      faker.name.findName(),
-      faker.name.findName(),
-    ],
-    scrumMasterName: faker.name.findName(),
-    startDate: faker.date.past(5).toISOString().substring(0, 10),
-    methodology: ['Agile', 'Waterfall'][Math.floor(Math.random() * 2)],
+const methodologies = ["Agile", "Waterfall"];
 
-  };
-
-  // Check if product name is already in use
-  const productNames = products.map((p) => p.productName);
-  if (productNames.includes(product.productName)) {
-    // If product name is not unique, generate a new one
-    product.productName = faker.commerce.productName();
-  }
-
-  products.push(product);
+function getRandomInt(min, max) {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min) + min);
 }
 
-// Log products array to console
-console.log(products);
+function getRandomName() {
+  return names[getRandomInt(0, names.length)];
+}
 
-// Write products array to products.json file
-fs.writeFile('products.json', JSON.stringify(products, null, 2), (err) => {
-  if (err) {
-    console.error(err);
-  } else {
-    console.log('Products file created!');
+function getRandomMethodology() {
+  return methodologies[getRandomInt(0, methodologies.length)];
+}
+
+function getRandomDevelopers() {
+  const numOfDevelopers = getRandomInt(1, 6);
+  const developers = new Set();
+  while (developers.size < numOfDevelopers) {
+    developers.add(getRandomName());
   }
-});
+  return Array.from(developers);
+}
+
+const products = Array.from({ length: 40 }, () => ({
+  productId: uuidv4(),
+  productName: `Project ${getRandomName()}`,
+  productOwner: getRandomName(),
+  developers: getRandomDevelopers(),
+  scrumMaster: getRandomName(),
+  startDate: `2022-0${getRandomInt(1, 10)}-0${getRandomInt(1, 10)}`,
+  methodology: getRandomMethodology(),
+}));
+
+fs.writeFileSync("productsData.json", JSON.stringify(products, null, 2));
+console.log("File generated successfully!");
