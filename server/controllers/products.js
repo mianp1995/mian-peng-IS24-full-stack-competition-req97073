@@ -5,27 +5,29 @@ const getAllProducts = async (req, res) => {
 };
 
 const createProduct = async (req, res) => {
+  console.log(req.body);
   const {
     productName,
-    productOwnerName,
+    productOwner,
     developers,
-    scrumMasterName,
+    scrumMaster,
     startDate,
     methodology,
   } = req.body;
-  if (!productName || !productOwnerName || !developers || !scrumMasterName || !startDate || !methodology) {
+  if (!productName || !productOwner || !developers || !scrumMaster || !startDate || !methodology) {
     return res.status(400).json({ error: 'All fields are required' });
   }
 
   const newProduct = {
     productId: uuid.v4(),
     productName,
-    productOwnerName,
+    productOwner,
     developers,
-    scrumMasterName,
+    scrumMaster,
     startDate,
     methodology
   };
+
 
   productsData.push(newProduct);
 
@@ -35,13 +37,15 @@ const createProduct = async (req, res) => {
 const updateProduct = async (req, res) => {
   const { id } = req.params;
 
+  console.log(req.body);
+
   if (!id) return res.status(400).json({ error: 'Product ID is required' });
 
   const {
     productName,
-    productOwnerName,
+    productOwner,
     developers,
-    scrumMasterName,
+    scrumMaster,
     startDate,
     methodology,
   } = req.body;
@@ -52,22 +56,22 @@ const updateProduct = async (req, res) => {
   }
 
   if (productName) productsData[foundIdx].productName = productName;
-  if (productOwnerName) productsData[foundIdx].productOwnerName = productOwnerName;
+  if (productOwner) productsData[foundIdx].productOwner = productOwner;
   if (developers) productsData[foundIdx].developers = developers;
-  if (scrumMasterName) productsData[foundIdx].scrumMasterName = scrumMasterName;
+  if (scrumMaster) productsData[foundIdx].scrumMaster = scrumMaster;
   if (startDate) productsData[foundIdx].startDate = startDate;
   if (methodology) productsData[foundIdx].methodology = methodology;
 
-  
+  console.log("updated");
   return res.status(200).json(productsData[foundIdx]);
 };
 
 const getProductsByScrumMaster = async (req, res) => {
-  const { scrumMasterName } = req.params;
+  const { scrumMaster } = req.params;
 
-  if (!scrumMasterName) return res.status(400).json({ error: 'scrumMasterName is required' });
+  if (!scrumMaster) return res.status(400).json({ error: 'scrumMasterName is required' });
 
-  return res.status(200).json(productsData.filter(p => p.scrumMasterName === scrumMasterName));
+  return res.status(200).json(productsData.filter(p => p.scrumMaster === scrumMaster));
 };
 
 const getProductsByDeveloper = async (req, res) => {

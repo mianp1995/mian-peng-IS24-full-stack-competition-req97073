@@ -1,32 +1,45 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { updateProduct } from '../services/productService';
 
-function EditProductForm({ product, closeModal }) {
-  // Add your form states here, for example:
+function EditProductForm({ product, closeModal, onProductEdit }) {
   const [productName, setProductName] = useState(product.productName);
-  const [productOwnerName, setProductOwnerName] = useState(product.productOwnerName);
-
-  useEffect(() => {
-    setProductName(product.productName);
-    setProductOwnerName(product.productOwnerName);
-  }, [product]);
+  const [scrumMaster, setScrumMaster] = useState(product.scrumMaster);
+  const [productOwner, setProductOwner] = useState(product.productOwner);
+  const [developers, setDevelopers] = useState(product.developers.join(', '));
+  const [startDate, setStartDate] = useState(product.startDate);
+  const [methodology, setMethodology] = useState(product.methodology);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const updatedProduct = {
-      ...product,
+    //Validate developers number
+    const developersList = developers.split(',').map((dev) => dev.trim());
+    if (developersList.length > 5) {
+      alert('Please enter up to 5 developer names');
+      return;
+    }
+
+    const productData = {
+      productId: product.productId,
       productName,
-      productOwnerName,
+      scrumMaster,
+      productOwner,
+      developers: developers.split(',').map((dev) => dev.trim()),
+      startDate,
+      methodology,
     };
 
-    // await updateProduct(updatedProduct);
-    // closeModal();
-    // window.location.reload(); // Refresh the product list
+    try {
+      const updatedProduct = await updateProduct(productData);
+      onProductEdit(updatedProduct);
+      closeModal();
+      window.location.reload(); 
+    } catch (error) {
+      console.error('Error updating product:', error);
+    }
   };
 
   return (
     <form onSubmit={handleSubmit}>
-      {/* Your form inputs, for example: */}
       <div>
         <label htmlFor="productName">Product Name:</label>
         <input
@@ -34,22 +47,68 @@ function EditProductForm({ product, closeModal }) {
           id="productName"
           value={productName}
           onChange={(e) => setProductName(e.target.value)}
+          required
         />
       </div>
       <div>
-        <label htmlFor="productOwnerName">Product Owner Name:</label>
+        <label htmlFor="scrumMaster">Scrum Master:</label>
         <input
           type="text"
-          id="productOwnerName"
-          value={productOwnerName}
-          onChange={(e) => setProductOwnerName(e.target.value)}
+          id="scrumMaster"
+          value={scrumMaster}
+          onChange={(e) => setScrumMaster(e.target.value)}
+          required
         />
       </div>
+      <div>
+        <label htmlFor="productOwner">Product Owner:</label>
+        <input
+          type="text"
+          id="productOwner"
+          value={productOwner}
+          onChange={(e) => setProductOwner(e.target.value)}
+          required
+        />
+      </div>
+      <div>
+        <label htmlFor="developers">Developer Names (up to 5, comma-separated):</label>
+        <input
+          type="text"
+          id="developers"
+          value={developers}
+          onChange={(e) => setDevelopers(e.target.value)}
+          required
+        />
+      </div>
+      <div>
+        <label htmlFor="startDate">Start Date:</label>
+        <input
+          type="date"
+          id="startDate"
+          value={startDate}
+          onChange={(e) => setStartDate(e.target.value)}
+          required
+        />
+      </div>
+      <div>
+        <label htmlFor="methodology">Methodology:</label>
+        <select
+          id="methodology"
+          value={methodology}
+          onChange={(e) => setMethodology(e.target.value)}
+          required
+        >
+          <option value="">Select a methodology</option>
+          <option value="Agile">Agile</option>
+          <option value="Waterfall">Waterfall</option>
+        </select>
+      </div>
       <button type="submit" className="btn btn-primary">
-        Save Changes
+        Save
       </button>
     </form>
   );
 }
 
 export default EditProductForm;
+

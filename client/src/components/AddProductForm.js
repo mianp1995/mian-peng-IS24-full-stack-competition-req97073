@@ -10,8 +10,15 @@ function AddProductForm({ closeModal, onProductAdd }) {
   const [methodology, setMethodology] = useState('');
 
   const handleSubmit = async (e) => {
-    console.log("sdad");
     e.preventDefault();
+    
+    //Validate developers number
+    const developersList = developers.split(',').map((dev) => dev.trim());
+    if (developersList.length > 5) {
+      alert('Please enter up to 5 developer names');
+      return;
+    }
+
     const productData = {
       productName,
       scrumMaster,

@@ -1,6 +1,5 @@
 import React from 'react';
 import ProductList from './components/ProductList';
-import AddProductForm from './components/AddProductForm';
 
 function App() {
   return (
