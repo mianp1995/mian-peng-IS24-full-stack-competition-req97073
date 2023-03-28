@@ -12,9 +12,9 @@ router.post('/', productsController.createProduct);
 router.put('/:id', productsController.updateProduct);
 
 // Search products by Scrum Master name
-router.get('/scrum-master/:scrumMasterName', productsController.getProductsByScrumMaster);
+router.get('/scrum-master/:scrumMaster', productsController.searchProductByScrumMaster);
 
 // Search products by developer name
-router.get('/developer/:developer', productsController.getProductsByDeveloper);
+router.get('/developer/:developer', productsController.searchProductByDeveloper);
 
 module.exports = router;

@@ -1,10 +1,19 @@
-const productsData = require('../data/productsData');const uuid = require('uuid');
+const fs = require('fs');
+const path = require('path');
+const uuid = require('uuid');
 
+const productsFilePath = path.join(__dirname, '..', 'data', 'productsData.json');
+
+//get all products
 const getAllProducts = async (req, res) => {
+  const productsData = JSON.parse(fs.readFileSync(productsFilePath));
   return res.status(200).json(productsData);
 };
 
+//add a new product
 const createProduct = async (req, res) => {
+  const productsData = JSON.parse(fs.readFileSync(productsFilePath));
+
   console.log(req.body);
   const {
     productName,
@@ -28,16 +37,18 @@ const createProduct = async (req, res) => {
     methodology
   };
 
-
   productsData.push(newProduct);
+
+  fs.writeFileSync(productsFilePath, JSON.stringify(productsData));
 
   return res.status(201).json(newProduct);
 };
 
+//update an existing product
 const updateProduct = async (req, res) => {
   const { id } = req.params;
 
-  console.log(req.body);
+  const productsData = JSON.parse(fs.readFileSync(productsFilePath));
 
   if (!id) return res.status(400).json({ error: 'Product ID is required' });
 
@@ -62,19 +73,27 @@ const updateProduct = async (req, res) => {
   if (startDate) productsData[foundIdx].startDate = startDate;
   if (methodology) productsData[foundIdx].methodology = methodology;
 
+  fs.writeFileSync(productsFilePath, JSON.stringify(productsData));
+
   return res.status(200).json(productsData[foundIdx]);
 };
 
-const getProductsByScrumMaster = async (req, res) => {
+//search product by a scrum master's name
+const searchProductByScrumMaster = async (req, res) => {
   const { scrumMaster } = req.params;
+
+  const productsData = JSON.parse(fs.readFileSync(productsFilePath));
 
   if (!scrumMaster) return res.status(400).json({ error: 'scrumMasterName is required' });
 
   return res.status(200).json(productsData.filter(p => p.scrumMaster === scrumMaster));
 };
 
-const getProductsByDeveloper = async (req, res) => {
+//search product by a developer's name
+const searchProductByDeveloper = async (req, res) => {
   const { developer } = req.params;
+
+  const productsData = JSON.parse(fs.readFileSync(productsFilePath));
 
   if (!developer) return res.status(400).json({ error: 'developerName is required' });
 
@@ -87,6 +106,7 @@ module.exports = {
   getAllProducts,
   createProduct,
   updateProduct,
-  getProductsByScrumMaster,
-  getProductsByDeveloper
+  searchProductByScrumMaster,
+  searchProductByDeveloper
 };
+

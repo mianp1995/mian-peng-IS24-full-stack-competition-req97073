@@ -30,7 +30,7 @@ function getRandomDevelopers() {
   return Array.from(developers);
 }
 
-const products = Array.from({ length: 50 }, () => ({
+const products = Array.from({ length: 40 }, () => ({
   productId: uuidv4(),
   productName: `Project ${getRandomName()}`,
   productOwner: getRandomName(),
@@ -40,5 +40,5 @@ const products = Array.from({ length: 50 }, () => ({
   methodology: getRandomMethodology(),
 }));
 
-fs.writeFileSync("productsData.js", `module.exports = ${JSON.stringify(products, null, 2)};`);
+fs.writeFileSync("productsData.json", JSON.stringify(products, null, 2));
 console.log("File generated successfully!");
