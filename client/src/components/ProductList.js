@@ -1,20 +1,10 @@
 import React, { useState, useEffect } from 'react';
+import { Button, Container, Dropdown, Header, Table, Modal as SemanticModal, Pagination } from 'semantic-ui-react';
+import 'semantic-ui-css/semantic.min.css';
 import Modal from 'react-modal';
 import { getAllProducts } from '../services/productService';
 import AddProductForm from './AddProductForm';
 import EditProductForm from './EditProductForm';
-
-
-const customStyles = {
-  content: {
-    top: '50%',
-    left: '50%',
-    right: 'auto',
-    bottom: 'auto',
-    marginRight: '-50%',
-    transform: 'translate(-50%, -50%)',
-  },
-};
 
 Modal.setAppElement('#root');
 
@@ -23,6 +13,18 @@ function ProductList() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [productToEdit, setProductToEdit] = useState(null);
+
+  // Pagination states
+  const [activePage, setActivePage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(5);
+
+  // Items per page options
+  const itemsPerPageOptions = [
+    { key: 5, text: '5', value: 5 },
+    { key: 10, text: '10', value: 10 },
+    { key: 25, text: '25', value: 25 },
+    { key: 50, text: '50', value: 50 },
+  ];
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -62,82 +64,110 @@ function ProductList() {
     setProducts(updatedProducts);
   };
 
+  const handlePaginationChange = (e, { activePage }) => {
+    setActivePage(activePage);
+  };
+
+  const handleItemsPerPageChange = (e, { value }) => {
+    setItemsPerPage(value);
+    setActivePage(1);
+  };
+
+  const getPageItems = (items, activePage, itemsPerPage) => {
+    const startIndex = (activePage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    return items.slice(startIndex, endIndex);
+  };
+
+  const visibleProducts = getPageItems(products, activePage, itemsPerPage);
+
 
   return (
-    <div>
-      <h1>Product List</h1>
-      <button className="btn btn-primary" onClick={openModal}>
+    <Container>
+      <Header as="h1">Product List</Header>
+      <Button primary onClick={openModal}>
         Add Product
-      </button>
-      <Modal
-        isOpen={isModalOpen}
-        onRequestClose={closeModal}
-        style={customStyles}
-        contentLabel="Add Product"
+      </Button>
+      <SemanticModal
+        closeIcon
+        open={isModalOpen}
+        onClose={closeModal}
+        size="small"
       >
-        <h2>Add Product</h2>
-        <AddProductForm closeModal={closeModal} onProductAdd={handleProductAddition} />
-        <button className="btn btn-secondary" onClick={closeModal}>
-          Close
-        </button>
-      </Modal>
+        <Header content="Add Product" />
+        <SemanticModal.Content>
+          <AddProductForm closeModal={closeModal} onProductAdd={handleProductAddition} />
+        </SemanticModal.Content>
+      </SemanticModal>
       {productToEdit && (
-        <Modal
-          isOpen={isEditModalOpen}
-          onRequestClose={closeEditModal}
-          style={customStyles}
-          contentLabel="Edit Product"
+        <SemanticModal
+          closeIcon
+          open={isEditModalOpen}
+          onClose={closeEditModal}
+          size="small"
         >
-          <h2>Edit Product</h2>
-          <EditProductForm
-            product={productToEdit}
-            closeModal={closeEditModal}
-            onProductEdit={handleProductEdit}
-          />
-          <button className="btn btn-secondary" onClick={closeEditModal}>
-            Close
-          </button>
-        </Modal>
+          <Header content="Edit Product" />
+          <SemanticModal.Content>
+            <EditProductForm
+              product={productToEdit}
+              closeModal={closeEditModal}
+              onProductEdit={handleProductEdit}
+            />
+          </SemanticModal.Content>
+        </SemanticModal>
       )}
-      <table className="table">
-        <thead>
-          <tr>
-            <th>Product Number</th>
-            <th>Product Name</th>
-            <th>Scrum Master</th>
-            <th>Product Owner</th>
-            <th>Developers</th>
-            <th>Start Date</th>
-            <th>Methodology</th>
-            <th>Edit</th>
-          </tr>
-        </thead>
-        <tbody>
-          {products.map((product) => (
-            <tr key={product.productId}>
-              <td>{product.productId}</td>
-              <td>{product.productName}</td>
-              <td>{product.scrumMaster}</td>
-              <td>{product.productOwner}</td>
-              <td>{product.developers.join(', ')}</td>
-              <td>{product.startDate}</td>
-              <td>{product.methodology}</td>
-              <td>
-                <button className="btn btn-primary" onClick={() => openEditModal(product)}>
+      <Table celled >
+        <Table.Header>
+          <Table.Row>
+            <Table.HeaderCell>Product Number</Table.HeaderCell>
+            <Table.HeaderCell>Product Name</Table.HeaderCell>
+            <Table.HeaderCell>Scrum Master</Table.HeaderCell>
+            <Table.HeaderCell>Product Owner</Table.HeaderCell>
+            <Table.HeaderCell>Developers</Table.HeaderCell>
+            <Table.HeaderCell>Start Date</Table.HeaderCell>
+            <Table.HeaderCell>Methodology</Table.HeaderCell>
+            <Table.HeaderCell>Edit</Table.HeaderCell>
+          </Table.Row>
+        </Table.Header>
+        <Table.Body>
+          {visibleProducts.map((product) => (
+            <Table.Row key={product.productId}>
+              <Table.Cell>{product.productId}</Table.Cell>
+              <Table.Cell>{product.productName}</Table.Cell>
+              <Table.Cell>{product.scrumMaster}</Table.Cell>
+              <Table.Cell>{product.productOwner}</Table.Cell>
+              <Table.Cell>{product.developers.join(', ')}</Table.Cell>
+              <Table.Cell>{product.startDate}</Table.Cell>
+              <Table.Cell>{product.methodology}</Table.Cell>
+              <Table.Cell>
+                <Button primary onClick={() => openEditModal(product)}>
                   Edit
-                </button>
-              </td>
-            </tr>
+                </Button>
+              </Table.Cell>
+            </Table.Row>
           ))}
-        </tbody>
-        <tfoot>
-          <tr>
-            <td colSpan="7">Total Products: {products.length}</td>
-            <td></td>
-          </tr>
-        </tfoot>
-      </table>
-    </div>
+        </Table.Body>
+        <Table.Footer>
+          <Table.Row>
+            <Table.HeaderCell colSpan="7">Total Products: {products.length}</Table.HeaderCell>
+            <Table.HeaderCell></Table.HeaderCell>
+          </Table.Row>
+        </Table.Footer>
+      </Table>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '1rem' }}>
+        <Pagination
+          activePage={activePage}
+          totalPages={Math.ceil(products.length / itemsPerPage)}
+          onPageChange={handlePaginationChange}
+        />
+        <Dropdown
+          selection
+          options={itemsPerPageOptions}
+          value={itemsPerPage}
+          onChange={handleItemsPerPageChange}
+        />
+      </div>
+    </Container>
   );
 }
 

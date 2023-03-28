@@ -1,4 +1,4 @@
-const productsData = require('../data/products');const uuid = require('uuid');
+const productsData = require('../data/productsData');const uuid = require('uuid');
 
 const getAllProducts = async (req, res) => {
   return res.status(200).json(productsData);
@@ -62,7 +62,6 @@ const updateProduct = async (req, res) => {
   if (startDate) productsData[foundIdx].startDate = startDate;
   if (methodology) productsData[foundIdx].methodology = methodology;
 
-  console.log("updated");
   return res.status(200).json(productsData[foundIdx]);
 };
 

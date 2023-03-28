@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { updateProduct } from '../services/productService';
+import { Button, Form, Input, Dropdown } from 'semantic-ui-react';
 
 function EditProductForm({ product, closeModal, onProductEdit }) {
   const [productName, setProductName] = useState(product.productName);
@@ -38,75 +39,78 @@ function EditProductForm({ product, closeModal, onProductEdit }) {
     }
   };
 
+  const methodologyOptions = [
+    { key: 'agile', text: 'Agile', value: 'Agile' },
+    { key: 'waterfall', text: 'Waterfall', value: 'Waterfall' },
+  ];
+
   return (
-    <form onSubmit={handleSubmit}>
-      <div>
+    <Form onSubmit={handleSubmit}>
+      <Form.Field>
         <label htmlFor="productName">Product Name:</label>
-        <input
+        <Input
           type="text"
           id="productName"
           value={productName}
           onChange={(e) => setProductName(e.target.value)}
           required
         />
-      </div>
-      <div>
+      </Form.Field>
+      <Form.Field>
         <label htmlFor="scrumMaster">Scrum Master:</label>
-        <input
+        <Input
           type="text"
           id="scrumMaster"
           value={scrumMaster}
           onChange={(e) => setScrumMaster(e.target.value)}
           required
         />
-      </div>
-      <div>
+      </Form.Field>
+      <Form.Field>
         <label htmlFor="productOwner">Product Owner:</label>
-        <input
+        <Input
           type="text"
           id="productOwner"
           value={productOwner}
           onChange={(e) => setProductOwner(e.target.value)}
           required
         />
-      </div>
-      <div>
+      </Form.Field>
+      <Form.Field>
         <label htmlFor="developers">Developer Names (up to 5, comma-separated):</label>
-        <input
+        <Input
           type="text"
           id="developers"
           value={developers}
           onChange={(e) => setDevelopers(e.target.value)}
           required
         />
-      </div>
-      <div>
+      </Form.Field>
+      <Form.Field>
         <label htmlFor="startDate">Start Date:</label>
-        <input
+        <Input
           type="date"
           id="startDate"
           value={startDate}
           onChange={(e) => setStartDate(e.target.value)}
           required
         />
-      </div>
-      <div>
+      </Form.Field>
+      <Form.Field>
         <label htmlFor="methodology">Methodology:</label>
-        <select
+        <Dropdown
           id="methodology"
+          selection
+          options={methodologyOptions}
           value={methodology}
-          onChange={(e) => setMethodology(e.target.value)}
+          onChange={(e, { value }) => setMethodology(value)}
           required
-        >
-          <option value="">Select a methodology</option>
-          <option value="Agile">Agile</option>
-          <option value="Waterfall">Waterfall</option>
-        </select>
-      </div>
-      <button type="submit" className="btn btn-primary">
+        />
+      </Form.Field>
+      <Button type="submit" primary>
         Save
-      </button>
-    </form>
+      </Button>
+    </Form>
   );
 }
 
