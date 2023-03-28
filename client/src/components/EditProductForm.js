@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { updateProduct } from '../services/productService';
 import { Button, Form, Input, Dropdown } from 'semantic-ui-react';
 
+//Define EditProductForm component with props
 function EditProductForm({ product, closeModal, onProductEdit }) {
   const [productName, setProductName] = useState(product.productName);
   const [scrumMaster, setScrumMaster] = useState(product.scrumMaster);
@@ -10,6 +11,7 @@ function EditProductForm({ product, closeModal, onProductEdit }) {
   const [startDate, setStartDate] = useState(product.startDate);
   const [methodology, setMethodology] = useState(product.methodology);
 
+  //Define handleSubmit function
   const handleSubmit = async (e) => {
     e.preventDefault();
     //Validate developers number
@@ -18,7 +20,8 @@ function EditProductForm({ product, closeModal, onProductEdit }) {
       alert('Please enter up to 5 developer names');
       return;
     }
-
+    
+    // Create product data object with updated fields
     const productData = {
       productId: product.productId,
       productName,

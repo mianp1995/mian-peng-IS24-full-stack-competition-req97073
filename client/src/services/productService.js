@@ -23,12 +23,12 @@ export const updateProduct = async(productData) => {
   return response.data;
 }
 
-export const searchProductByScrumMaster = async(productData) => {
-  const response = await axios.get(`${API_URL}/api/products/${productData.scrumMaster}`);
+export const searchProductByScrumMaster = async(scrumMaster) => {
+  const response = await axios.get(`${API_URL}/api/products/scrum-master/${scrumMaster}`);
   return response.data;
 }
 
-export const searchProductByDeveloper = async(productData) => {
-  const response = await axios.get(`${API_URL}/api/products/${productData.developer}`);
+export const searchProductByDeveloper = async(developer) => {
+  const response = await axios.get(`${API_URL}/api/products/developer/${developer}`);
   return response.data;
 }

@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Container, Dropdown, Header, Table, Modal as SemanticModal, Pagination } from 'semantic-ui-react';
+import { Button, Container, Dropdown, Header, Table, Modal as SemanticModal, Pagination, Input } from 'semantic-ui-react';
 import 'semantic-ui-css/semantic.min.css';
 import Modal from 'react-modal';
-import { getAllProducts } from '../services/productService';
+import { getAllProducts, searchProductByScrumMaster, searchProductByDeveloper } from '../services/productService';
 import AddProductForm from './AddProductForm';
 import EditProductForm from './EditProductForm';
+
 
 Modal.setAppElement('#root');
 
@@ -13,6 +14,8 @@ function ProductList() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [productToEdit, setProductToEdit] = useState(null);
+  const [scrumMasterSearch, setScrumMasterSearch] = useState('');
+  const [developerSearch, setDeveloperSearch] = useState('');
 
   // Pagination states
   const [activePage, setActivePage] = useState(1);
@@ -26,6 +29,7 @@ function ProductList() {
     { key: 50, text: '50', value: 50 },
   ];
 
+
   useEffect(() => {
     const fetchProducts = async () => {
       const products = await getAllProducts();
@@ -34,7 +38,8 @@ function ProductList() {
 
     fetchProducts();
   }, []);
-
+  
+  //functions for addProductForm
   const openModal = () => {
     setIsModalOpen(true);
   };
@@ -42,7 +47,8 @@ function ProductList() {
   const closeModal = () => {
     setIsModalOpen(false);
   };
-
+  
+  //functions for editProductForm
   const openEditModal = (product) => {
     setIsEditModalOpen(true);
     setProductToEdit(product);
@@ -52,17 +58,41 @@ function ProductList() {
     setIsEditModalOpen(false);
     setProductToEdit(null);
   };
-
+  
+  //function for adding products
   const handleProductAddition = (newProduct) => {
     setProducts([...products, newProduct]);
   };
-
+  
+  //function for editting products
   const handleProductEdit = (editedProduct) => {
     const updatedProducts = products.map((product) =>
       product.productId === editedProduct.productId ? editedProduct : product
     );
     setProducts(updatedProducts);
   };
+  
+  // function for handlling search
+
+  function handleSearch(type) {
+    if (type === 'scrumMaster') {
+      searchProductByScrumMaster(scrumMasterSearch)
+        .then((searchResults) => {
+          setProducts(searchResults);
+        })
+        .catch((error) => {
+          console.error('Error searching products by Scrum Master:', error);
+        });
+    } else if (type === 'developer') {
+      searchProductByDeveloper(developerSearch)
+        .then((searchResults) => {
+          setProducts(searchResults);
+        })
+        .catch((error) => {
+          console.error('Error searching products by Developer:', error);
+        });
+    }
+  }
 
   const handlePaginationChange = (e, { activePage }) => {
     setActivePage(activePage);
@@ -80,14 +110,40 @@ function ProductList() {
   };
 
   const visibleProducts = getPageItems(products, activePage, itemsPerPage);
-
-
+  
   return (
     <Container>
       <Header as="h1">Product List</Header>
-      <Button primary onClick={openModal}>
-        Add Product
-      </Button>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+      <div>
+        <Input
+          icon="search"
+          placeholder="Search by Scrum Master..."
+          value={scrumMasterSearch}
+          onChange={(e) => setScrumMasterSearch(e.target.value)}
+        />
+        <Input
+          icon="search"
+          placeholder="Search by Developer..."
+          value={developerSearch}
+          onChange={(e) => setDeveloperSearch(e.target.value)}
+        />
+        <Button primary onClick={() => handleSearch('scrumMaster')}>
+          Search by Scrum Master
+        </Button>
+        <Button primary onClick={() => handleSearch('developer')}>
+          Search by Developer
+        </Button>
+        <Button secondary onClick={() => {
+          window.location.reload();
+        }}>
+          Reset
+        </Button>
+      </div>
+        <Button primary onClick={openModal}>
+          Add Product
+        </Button>
+      </div>
       <SemanticModal
         closeIcon
         open={isModalOpen}
@@ -116,7 +172,7 @@ function ProductList() {
           </SemanticModal.Content>
         </SemanticModal>
       )}
-      <Table celled >
+      <Table celled>
         <Table.Header>
           <Table.Row>
             <Table.HeaderCell>Product Number</Table.HeaderCell>
@@ -126,7 +182,7 @@ function ProductList() {
             <Table.HeaderCell>Developers</Table.HeaderCell>
             <Table.HeaderCell>Start Date</Table.HeaderCell>
             <Table.HeaderCell>Methodology</Table.HeaderCell>
-            <Table.HeaderCell>Edit</Table.HeaderCell>
+            <Table.HeaderCell>Action</Table.HeaderCell>
           </Table.Row>
         </Table.Header>
         <Table.Body>
