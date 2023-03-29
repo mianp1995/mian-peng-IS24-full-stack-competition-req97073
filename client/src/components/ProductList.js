@@ -14,8 +14,9 @@ function ProductList() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [productToEdit, setProductToEdit] = useState(null);
-  const [scrumMasterSearch, setScrumMasterSearch] = useState('');
-  const [developerSearch, setDeveloperSearch] = useState('');
+  const [searchName, setSearchName] = useState('');
+  // const [scrumMasterSearch, setScrumMasterSearch] = useState('');
+  // const [developerSearch, setDeveloperSearch] = useState('');
 
   // Pagination states
   const [activePage, setActivePage] = useState(1);
@@ -76,7 +77,7 @@ function ProductList() {
 
   function handleSearch(type) {
     if (type === 'scrumMaster') {
-      searchProductByScrumMaster(scrumMasterSearch)
+      searchProductByScrumMaster(searchName)
         .then((searchResults) => {
           setProducts(searchResults);
         })
@@ -84,7 +85,7 @@ function ProductList() {
           console.error('Error searching products by Scrum Master:', error);
         });
     } else if (type === 'developer') {
-      searchProductByDeveloper(developerSearch)
+      searchProductByDeveloper(searchName)
         .then((searchResults) => {
           setProducts(searchResults);
         })
@@ -113,28 +114,28 @@ function ProductList() {
   
   return (
     <Container>
-      <Header as="h1">Product List</Header>
+      <Header as="h1">List of IBM Products</Header>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
       <div>
         <Input
           icon="search"
-          placeholder="Search by Scrum Master..."
-          value={scrumMasterSearch}
-          onChange={(e) => setScrumMasterSearch(e.target.value)}
+          placeholder="Please input a name..."
+          value={searchName}
+          onChange={(e) => setSearchName(e.target.value)}
         />
-        <Input
+        {/* <Input
           icon="search"
           placeholder="Search by Developer..."
           value={developerSearch}
           onChange={(e) => setDeveloperSearch(e.target.value)}
-        />
+        /> */}
         <Button primary onClick={() => handleSearch('scrumMaster')}>
           Search by Scrum Master
         </Button>
         <Button primary onClick={() => handleSearch('developer')}>
           Search by Developer
         </Button>
-        <Button secondary onClick={() => {
+        <Button color='red' onClick={() => {
           window.location.reload();
         }}>
           Reset
