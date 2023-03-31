@@ -35,16 +35,29 @@ paths:
             properties:
               productName:
                 type: string
+                description: Name of Product
+                example: product A
               productOwner:
                 type: string
+                description: Name of Product Owner
+                example: Tom
               developers:
                 type: string
+                description: Name of Developers
+                example: Jerry
+                maxium: 5
               scrumMaster:
                 type: string
+                description: Name of Scrum Master
+                example: Ivy
               startDate:
                 type: string
+                description: Start Date of the Product
+                example: '2020-01-29'
               methodology:
                 type: string
+                description: Agile or Waterfall
+                example: 'Waterfall'
       responses:
         '201':
           description: Created
@@ -70,16 +83,29 @@ paths:
             properties:
               productName:
                 type: string
+                description: Name of Product
+                example: product A
               productOwner:
                 type: string
+                description: Name of Product Owner
+                example: Tom
               developers:
                 type: string
+                description: Name of Developers
+                example: Jerry
+                maxium: 5
               scrumMaster:
                 type: string
+                description: Name of Scrum Master
+                example: Ivy
               startDate:
                 type: string
+                description: Start Date of the Product
+                example: '2020-01-29'
               methodology:
                 type: string
+                description: Agile or Waterfall
+                example: 'Waterfall'
       responses:
         '200':
           description: OK
@@ -96,6 +122,7 @@ paths:
         - in: path
           name: scrumMaster
           description: Name of the Scrum Master to search for
+          example: Alex
           required: true
           type: string
       responses:
@@ -112,6 +139,7 @@ paths:
         - in: path
           name: developer
           description: Name of the developer to search for
+          example: Tim
           required: true
           type: string
       responses:
