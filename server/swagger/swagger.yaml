@@ -1,0 +1,121 @@
+swagger: '2.0'
+info:
+  title: My Product API
+  version: 1.0.0
+  description: API for managing products in a scrum environment
+host: localhost:8080
+basePath: /api
+schemes:
+  - http
+produces:
+  - application/json
+consumes:
+  - application/json
+
+paths:
+  /products:
+    get:
+      summary: Get all products
+      description: Returns a list of all products in the system
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: OK
+    post:
+      summary: Add a new product
+      description: Creates a new product with the given details
+      parameters:
+        - in: body
+          name: body
+          description: Product details
+          required: true
+          schema:
+            type: object
+            properties:
+              productName:
+                type: string
+              productOwner:
+                type: string
+              developers:
+                type: string
+              scrumMaster:
+                type: string
+              startDate:
+                type: string
+              methodology:
+                type: string
+      responses:
+        '201':
+          description: Created
+        '400':
+          description: Bad Request
+
+  /products/{id}:
+    put:
+      summary: Update a product
+      description: Updates an existing product with the given ID
+      parameters:
+        - in: path
+          name: id
+          description: ID of the product to update
+          required: true
+          type: string
+        - in: body
+          name: body
+          description: Product details
+          required: true
+          schema:
+            type: object
+            properties:
+              productName:
+                type: string
+              productOwner:
+                type: string
+              developers:
+                type: string
+              scrumMaster:
+                type: string
+              startDate:
+                type: string
+              methodology:
+                type: string
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+        '404':
+          description: Not Found
+
+  /products/scrum-master/{scrumMaster}:
+    get:
+      summary: Search products by Scrum Master name
+      description: Returns a list of products that have the given Scrum Master
+      parameters:
+        - in: path
+          name: scrumMaster
+          description: Name of the Scrum Master to search for
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+
+  /products/developer/{developer}:
+    get:
+      summary: Search products by developer name
+      description: Returns a list of products that have the given developer
+      parameters:
+        - in: path
+          name: developer
+          description: Name of the developer to search for
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request

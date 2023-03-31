@@ -31,11 +31,15 @@ function AddProductForm({ closeModal, onProductAdd }) {
 
     try {
       const newProduct = await createProduct(productData);
+      if (!newProduct) {
+        throw new Error('Failed to create product.');
+      }
       onProductAdd(newProduct);
       closeModal();
-      window.location.reload(); 
+      window.location.reload();
     } catch (error) {
-      console.error('Error submitting form:', error);
+      console.error('Error creating product:', error);
+      alert('Failed to create product. Please try again later.');
     }
   };
 

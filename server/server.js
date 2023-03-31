@@ -2,6 +2,9 @@ const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const productRoutes = require('./routers/products');
+const swaggerUi = require('swagger-ui-express');
+const YAML = require('yamljs');
+const swaggerDocument = YAML.load('./swagger/swagger.yaml');
 const app = express();
 // const cacheClient = require('./nodeCache');
 // const mockProducts = require('./data/products');
@@ -20,6 +23,7 @@ app.use(bodyParser.json());
 // define routes
 app.use('/api/products', productRoutes);
 
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 // define port
 const port = 8080;
 

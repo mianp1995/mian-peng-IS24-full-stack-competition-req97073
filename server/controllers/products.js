@@ -41,7 +41,7 @@ const createProduct = async (req, res) => {
 
   fs.writeFileSync(productsFilePath, JSON.stringify(productsData));
 
-  return res.status(201).json(newProduct);
+  return res.status(200).json(newProduct);
 };
 
 //update an existing product

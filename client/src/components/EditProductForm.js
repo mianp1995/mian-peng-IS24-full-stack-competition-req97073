@@ -34,11 +34,15 @@ function EditProductForm({ product, closeModal, onProductEdit }) {
 
     try {
       const updatedProduct = await updateProduct(productData);
+      if (!updatedProduct) {
+        throw new Error('Failed to update product.');
+      }
       onProductEdit(updatedProduct);
       closeModal();
-      window.location.reload(); 
+      window.location.reload();
     } catch (error) {
       console.error('Error updating product:', error);
+      alert('Failed to update product. Please try again later.');
     }
   };
 

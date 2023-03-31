@@ -15,8 +15,7 @@ function ProductList() {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [productToEdit, setProductToEdit] = useState(null);
   const [searchName, setSearchName] = useState('');
-  // const [scrumMasterSearch, setScrumMasterSearch] = useState('');
-  // const [developerSearch, setDeveloperSearch] = useState('');
+
 
   // Pagination states
   const [activePage, setActivePage] = useState(1);
@@ -123,12 +122,6 @@ function ProductList() {
           value={searchName}
           onChange={(e) => setSearchName(e.target.value)}
         />
-        {/* <Input
-          icon="search"
-          placeholder="Search by Developer..."
-          value={developerSearch}
-          onChange={(e) => setDeveloperSearch(e.target.value)}
-        /> */}
         <Button primary onClick={() => handleSearch('scrumMaster')}>
           Search by Scrum Master
         </Button>
