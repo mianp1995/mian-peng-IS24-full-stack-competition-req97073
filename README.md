@@ -6,7 +6,7 @@ This repository contains the assignment for the BC Public Service code challenge
 Installation
 ------------
 * Clone the repository to your local machine by running `git clone https://github.com/mianp1995/mian-peng-IS24-full-stack-competition-req97073.git`.
-* Open a terminal and navigate to the `./client directory`.
+* Open a terminal and navigate to the `./client` directory.
 * Run `npm install` to install the client-side dependencies.
 * Run `npm start` to start the client-side development server.
 * Open another terminal and navigate to the `./server` directory.
